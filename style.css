@@ -1,0 +1,71 @@
+input[type=number]::-webkit-inner-spin-button, 
+		input[type=number]::-webkit-outer-spin-button { 
+ 							-webkit-appearance: none; 
+  							margin: 0; 
+		}
+	#container {
+  text-align: center;
+  margin: 0 auto;
+  width: 100%;
+  height: 300px;
+  position: relative;
+}
+#card {
+  max-width: 400px;
+  height: 250px;
+  background: url("logo/bg.jpg") no-repeat 0 -50px;
+  background-size: 150%;
+  margin: 0 auto;
+  border-radius: 20px;
+  position: relative;
+  z-index: 10;
+}
+
+#cardnumber {
+  height: 50px;
+  position: absolute;
+  top: 110px;
+  left: 30px;
+
+}
+#cardnumber > input {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: justify;
+  max-width: 90%;
+  background: transparent;
+}
+div#brand {
+    
+    height: 25%;
+    width: 25%;
+    background-size: 90%;
+    position: absolute;
+    left: 75%;
+    top: 75%;
+}
+.VISA {
+	background: url(logo/visa.png) 0% 0% no-repeat;
+}
+.MasterCard {
+	background: url(logo/mastercard.svg) 0% 0% no-repeat;
+}
+.Diners {
+	background: url(logo/diners.png) 0% 0% no-repeat;
+}
+.Maestro {
+	background: url(logo/maestro.png) 0% 0% no-repeat;
+}
+.JCB {
+  background: url(logo/jcb.png) 0% 0% no-repeat;
+}
+.chip {
+  background: url(logo/chip.png) 0% 0% no-repeat;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-size: 50px;
+    top: 55px;
+    left: 40px;
+
+}
