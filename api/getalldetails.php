@@ -40,10 +40,10 @@ session_start();
 
   //validations  
 
-	$servername = "localhost";
-	$username = "cardgen";
-	$password = "0ww7stZ6LEpA3WOW";
-	$dbname = "cardgen";
+	$servername = "";
+	$username = "";
+	$password = "";
+	$dbname = "";
 
 switch ($arr['methodName']) {
     case 'getBin':
