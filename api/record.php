@@ -1,10 +1,10 @@
 <?php 
 session_start(); 
 	$session['phpsessionid'] = session_id();
-	$servername = "localhost";
-	$username = "cardgen";
-	$password = "0ww7stZ6LEpA3WOW";
-	$dbname = "cardgen";
+	$servername = "";
+	$username = "";
+	$password = "";
+	$dbname = "";
 	$body = file_get_contents("php://input");
 	$json = json_decode(json_encode($body), true);
 	$merge = array_merge(json_decode($json, true), $_SERVER, $session);
