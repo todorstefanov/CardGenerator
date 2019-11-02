@@ -1,13 +1,13 @@
-<?php 
+<?php
 session_start();
+require_once('credenials.php');
 
-    
     $body = file_get_contents("php://input");
     $json = json_decode(json_encode($body), true);
     $arr = json_decode($json);
     $arr = (array) $arr;
 
-   //validations 
+   //validations
     if (empty($arr['fromDate'])) {
         $arr['fromDate'] = date("Y-m-d");
     }
@@ -33,17 +33,14 @@ session_start();
 
     if ( ((int)$arr['minEffort'] === $arr['minEffort'] && (int)$arr['minEffort'] < 0) || ((int)$arr['maxEffort'] == $arr['maxEffort'] && (int)$arr['maxEffort'] < 0))    {
          die('{"ERROR": "counter is not valid integer min - '. $arr['minEffort'] . " max - ". $arr['maxEffort'] .'"}' );
-    } 
+    }
     if (empty($arr['methodName'])) {
         die('{"ERROR"}: "methodName cannot be empty. Possible values are: getBin, getPan, getAll, getBySession"');
     }
 
-  //validations  
+  //validations
 
-	$servername = "";
-	$username = "";
-	$password = "";
-	$dbname = "";
+
 
 switch ($arr['methodName']) {
     case 'getBin':
@@ -54,7 +51,7 @@ switch ($arr['methodName']) {
 // Check connection
     if ($conn->connect_error) {
         die(json_encode("Connection failed: " . $conn->connect_error));
-    } 
+    }
     $sql = "SELECT ID, phpsessionid, cardnumber, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."') AND bin = ".$arr['bin']." AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ")";
 
     #var_dump($sql); die();
@@ -68,8 +65,8 @@ switch ($arr['methodName']) {
         // output data of each row
         foreach ($result as $key => $value) {
             $r[$key] = $value;
-        }    
-        
+        }
+
         print_r ( json_encode( (object)$r ) ) ;
 
     } else {
@@ -88,7 +85,7 @@ switch ($arr['methodName']) {
 // Check connection
     if ($conn->connect_error) {
         die(json_encode("Connection failed: " . $conn->connect_error));
-    } 
+    }
     $sql = "SELECT ID, phpsessionid, cardnumber, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."') AND pan = ".$arr['pan']." AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ")";
 
     #var_dump($sql); die();
@@ -102,7 +99,7 @@ switch ($arr['methodName']) {
         // output data of each row
         foreach ($result as $key => $value) {
             $r[$key] = $value;
-        }    
+        }
 
         print_r ( json_encode($r) ) ;
 
@@ -121,7 +118,7 @@ switch ($arr['methodName']) {
 // Check connection
     if ($conn->connect_error) {
         die(json_encode("Connection failed: " . $conn->connect_error));
-    } 
+    }
     $sql = "SELECT ID, phpsessionid, cardnumber, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."')  AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ")";
 
     #var_dump($sql); die();
@@ -135,7 +132,7 @@ switch ($arr['methodName']) {
         // output data of each row
         foreach ($result as $key => $value) {
             $r[$key] = $value;
-        }    
+        }
 
         print_r ( json_encode($r) ) ;
 
@@ -143,8 +140,8 @@ switch ($arr['methodName']) {
         echo '{"Results" : "0"}';
     };
 
-    mysqli_close($conn); 
-        break;  
+    mysqli_close($conn);
+        break;
     case 'getBySession':
         $conn = new mysqli($servername, $username, $password, $dbname);
     if ( empty($arr['session'])) {
@@ -153,7 +150,7 @@ switch ($arr['methodName']) {
 // Check connection
     if ($conn->connect_error) {
         die(json_encode("Connection failed: " . $conn->connect_error));
-    } 
+    }
     $sql = "SELECT ID, phpsessionid, cardnumber, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."')  AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ") AND phpsessionid = '". $arr['session']. "'";
 
     #var_dump($sql); die();
@@ -167,7 +164,7 @@ switch ($arr['methodName']) {
         // output data of each row
         foreach ($result as $key => $value) {
             $r[$key] = $value;
-        }    
+        }
 
         print_r ( json_encode($r) ) ;
 
@@ -175,8 +172,8 @@ switch ($arr['methodName']) {
         echo '{"Results" : "0"}';
     };
 
-    mysqli_close($conn); 
-        break;  
+    mysqli_close($conn);
+        break;
     default:
             die('{"ERROR"}: "methodName cannot be empty. Possible values are: getBin, getPan, getAll, getBySession"');
         break;
