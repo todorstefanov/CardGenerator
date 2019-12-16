@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('credenials.php');
+
 
     $body = file_get_contents("php://input");
     $json = json_decode(json_encode($body), true);
@@ -40,7 +40,10 @@ require_once('credenials.php');
 
   //validations
 
-
+	$servername = "localhost";
+	$username = "cardgen";
+	$password = "0ww7stZ6LEpA3WOW";
+	$dbname = "cardgen";
 
 switch ($arr['methodName']) {
     case 'getBin':
@@ -52,7 +55,7 @@ switch ($arr['methodName']) {
     if ($conn->connect_error) {
         die(json_encode("Connection failed: " . $conn->connect_error));
     }
-    $sql = "SELECT ID, phpsessionid, cardnumber, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."') AND bin = ".$arr['bin']." AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ")";
+    $sql = "SELECT ID, phpsessionid, cardnumber, brand, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."') AND bin = ".$arr['bin']." AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ")";
 
     #var_dump($sql); die();
     if (!mysqli_query($conn, $sql)) {
@@ -86,7 +89,7 @@ switch ($arr['methodName']) {
     if ($conn->connect_error) {
         die(json_encode("Connection failed: " . $conn->connect_error));
     }
-    $sql = "SELECT ID, phpsessionid, cardnumber, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."') AND pan = ".$arr['pan']." AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ")";
+    $sql = "SELECT ID, phpsessionid, cardnumber,brand, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."') AND pan = ".$arr['pan']." AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ")";
 
     #var_dump($sql); die();
     if (!mysqli_query($conn, $sql)) {
@@ -119,7 +122,7 @@ switch ($arr['methodName']) {
     if ($conn->connect_error) {
         die(json_encode("Connection failed: " . $conn->connect_error));
     }
-    $sql = "SELECT ID, phpsessionid, cardnumber, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."')  AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ")";
+    $sql = "SELECT ID, phpsessionid, cardnumber,brand, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."')  AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ")";
 
     #var_dump($sql); die();
     if (!mysqli_query($conn, $sql)) {
@@ -151,7 +154,7 @@ switch ($arr['methodName']) {
     if ($conn->connect_error) {
         die(json_encode("Connection failed: " . $conn->connect_error));
     }
-    $sql = "SELECT ID, phpsessionid, cardnumber, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."')  AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ") AND phpsessionid = '". $arr['session']. "'";
+    $sql = "SELECT ID, phpsessionid, cardnumber, brand, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."')  AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ") AND phpsessionid = '". $arr['session']. "'";
 
     #var_dump($sql); die();
     if (!mysqli_query($conn, $sql)) {
@@ -174,6 +177,41 @@ switch ($arr['methodName']) {
 
     mysqli_close($conn);
         break;
+
+
+        case 'getBrand':
+            $conn = new mysqli($servername, $username, $password, $dbname);
+        if ( empty($arr['brand'])) {
+        die('{"ERROR"}: "brand is empty"');
+        }
+    // Check connection
+        if ($conn->connect_error) {
+            die(json_encode("Connection failed: " . $conn->connect_error));
+        }
+        $sql = "SELECT ID, phpsessionid,  cardnumber, brand, bin, pan, counter, REMOTE_ADDR FROM data WHERE (DATE(DateCreated) BETWEEN '". $arr['fromDate'] ."' AND '". $arr['toDate']."') AND brand = '".$arr['brand']."' AND ( counter > ". (int)$arr['minEffort']. " AND counter < " . (int)$arr['maxEffort']. ")";
+
+        #var_dump($sql); die();
+        if (!mysqli_query($conn, $sql)) {
+             die(json_encode("Error: " . mysqli_error($conn)));
+        }
+        $result = $conn->query($sql);
+        $r = array();
+        if ($result->num_rows > 0) {
+
+            // output data of each row
+            foreach ($result as $key => $value) {
+                $r[$key] = $value;
+            }
+
+            print_r ( json_encode($r) ) ;
+
+        } else {
+            echo '{"Results" : "0"}';
+        };
+
+        mysqli_close($conn);
+
+            break;
     default:
             die('{"ERROR"}: "methodName cannot be empty. Possible values are: getBin, getPan, getAll, getBySession"');
         break;
